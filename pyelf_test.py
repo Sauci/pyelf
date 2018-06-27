@@ -6,7 +6,7 @@
 
 import os
 import pytest
-from pyelf.pyelf import Address, Symbol, ElfException, ElfFile
+from pyelf.pyelf import Address, ElfException, ElfFile
 
 
 @pytest.fixture
