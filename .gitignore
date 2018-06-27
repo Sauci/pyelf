@@ -1,0 +1,5 @@
+.coverage
+.idea/*
+build/*
+dist/*
+pyelf.egg-info/*

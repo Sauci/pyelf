@@ -1,0 +1,28 @@
+[![tests status](https://travis-ci.org/Sauci/pyelf.svg?branch=master)](https://travis-ci.org/Sauci/pyelf)
+[![code coverage](https://codecov.io/gh/Sauci/pyelf/branch/master/graph/badge.svg?token=Q5aceZRFXh)](https://codecov.io/gh/Sauci/pyelf)
+## package description
+the purpose of this package is to provide high level API to work with [elf](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format) files.
+
+## installation
+
+### using `pip`
+install the package by running the following command:
+`pip install git+https://github.com/Sauci/pyelf.git@master`
+
+### from source
+this package uses [pyelftools](https://pypi.org/project/pyelftools) package. if it is not already installed, install it first.
+once the above prerequisite is installed:
+- download the [pyelf](https://github.com/Sauci/pyelf/archive/master.zip) package
+- unzip it
+- move to the directory containing the setup.py file
+- run the command `python setup.py install`
+
+**note:** the above command might require privileged access to succeed.
+
+## example of usage
+the bellow code snippet shows how to load an elf file and get some of its properties.
+
+```python
+
+
+```
