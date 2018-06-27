@@ -23,6 +23,22 @@ once the above prerequisite is installed:
 the bellow code snippet shows how to load an elf file and get some of its properties.
 
 ```python
+from pyelf import ElfFile
 
+elf = ElfFile('test_input/input.elf')
+
+# get a list of all symbols in file test_input/input.elf.
+symbols = elf.symbols()
+assert 'symbol_uint8' in symbols
+
+
+# get an instance of Symbol class for symbol named symbol_uint8.
+symbol = elf.get_symbol('symbol_uint8')
+
+# get address of symbol symbol_uint8.
+assert isinstance(symbol.address(), int)
+
+# get size of symbol symbol_uint8.
+assert symbol.size() == 1
 
 ```
