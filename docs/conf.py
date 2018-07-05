@@ -26,7 +26,7 @@ import sphinx_rtd_theme
 
 sys.path.insert(0, os.path.abspath('..'))
 
-import pyelf
+#from pyelf import __author__
 
 # -- General configuration ------------------------------------------------
 
@@ -64,7 +64,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'pyelf'
-author = pyelf.__author__
+author = 'Guillaume Sottas'
 copyright = '%s, %s' % (datetime.date.today().year, author)
 
 # The version info for the project you're documenting, acts as replacement for
@@ -72,7 +72,7 @@ copyright = '%s, %s' % (datetime.date.today().year, author)
 # built documents.
 #
 # The short X.Y version.
-version = pkg_resources.get_distribution(project).version
+version = '0.1.0'# pkg_resources.get_distribution(project).version
 # The full version, including alpha/beta/rc tags.
 release = version
 
