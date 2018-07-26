@@ -44,6 +44,19 @@ def test_get_base_address():
     assert elf_file.get_base_address() == 0x08000000
 
 
+def test_get_abi_info():
+    elf_file = ElfFile(os.path.join('test_input', 'input.elf'))
+    abi_info = elf_file.get_abi_info()
+    assert abi_info.machine == 'EM_ARM'
+    assert abi_info.version == 'EV_CURRENT'
+
+
+def test_get_endianness():
+    elf_file = ElfFile(os.path.join('test_input', 'input.elf'))
+    endianness = elf_file.endianness
+    assert endianness == 'big'
+
+
 @pytest.mark.parametrize('symbol, size, address', ((
         ('symbol_uint8', 1, 0x080154CC),
         ('symbol_uint16', 2, 0x080154CE),
