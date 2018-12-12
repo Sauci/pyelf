@@ -79,6 +79,7 @@ class ElfFile(ELFFile):
     def __init__(self, path):
         fp = open(path, 'rb')
         super(ElfFile, self).__init__(stream=fp)
+        self.path = self.stream.name
         self.endianness = self.little_endian
         self._symbols = dict()
         for section in self.iter_sections():
@@ -97,10 +98,6 @@ class ElfFile(ELFFile):
         """
         return self._endianness
 
-    @endianness.getter
-    def endianness(self):
-        return self._endianness
-
     @endianness.setter
     def endianness(self, value):
         if value:
@@ -108,6 +105,7 @@ class ElfFile(ELFFile):
         else:
             self._endianness = 'big'
 
+    @property
     def path(self):
         """
         returns the full path of the elf file.
@@ -115,17 +113,20 @@ class ElfFile(ELFFile):
         :return: path
         :rtype: str
         """
-        return self.stream.name
+        return self._path
+
+    @path.setter
+    def path(self, value):
+        self._path = value
 
     def files(self):
         """
-        returns a list containing all source files in the ELF file.
+        returns an iterator containing all source files in the ELF file.
         
         :return: list of file name
         :rtype: list
         """
-        return [k for k, v in self._symbols.items() if
-                hasattr(v, 'st_info') and v.st_info.type == 'STT_FILE']
+        return (k for k, v in self._symbols.items() if hasattr(v, 'st_info') and v.st_info.type == 'STT_FILE')
 
     def symbols(self):
         """

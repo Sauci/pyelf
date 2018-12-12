@@ -6,3 +6,4 @@ docs/.build
 docs/.static
 docs/.templates
 pyelf.egg-info/*
+test_input/build

@@ -9,19 +9,16 @@ import pytest
 from pyelf.pyelf import Address, ElfException, ElfFile
 
 
-@pytest.fixture
-def elf_path():
-    for elf in [os.path.join('test_input', f) for f in os.listdir("test_input") if f.endswith('.elf')]:
-        yield (elf)
-
-
 def test_address_string_format():
     address = Address(12)
     assert str(address) == '0x0000000C'
 
 
-def test_path(elf_path):
-    assert ElfFile(elf_path).path() == elf_path
+@pytest.mark.parametrize('elf_file', (
+        os.path.join('test_input', 'big_endian.elf'),
+        os.path.join('test_input', 'little_endian.elf')))
+def test_path(elf_file):
+    assert ElfFile(elf_file).path == elf_file
 
 
 def test_files():
@@ -51,10 +48,13 @@ def test_get_abi_info():
     assert abi_info.version == 'EV_CURRENT'
 
 
-def test_get_endianness():
-    elf_file = ElfFile(os.path.join('test_input', 'input.elf'))
+@pytest.mark.parametrize('elf_file, expected_endianness', (
+        ('big_endian.elf', 'big'),
+        ('little_endian.elf', 'little')))
+def test_get_endianness(elf_file, expected_endianness):
+    elf_file = ElfFile(os.path.join('test_input', elf_file))
     endianness = elf_file.endianness
-    assert endianness == 'big'
+    assert endianness == expected_endianness
 
 
 @pytest.mark.parametrize('symbol, size, address', ((
@@ -78,6 +78,6 @@ def test_get_not_existent_symbol():
 
 def test_get_binary():
     elf = ElfFile(os.path.join('test_input', 'input.elf'))
-    with open(elf.path().replace('.elf', '.bin'), 'rb') as fp:
+    with open(elf.path.replace('.elf', '.bin'), 'rb') as fp:
         binary = fp.read()
     assert elf.get_binary() == binary
