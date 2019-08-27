@@ -66,8 +66,8 @@ def test_get_endianness(elf_file, expected_endianness):
         ('symbol_sint32', 4, 0x080154D8))))
 def test_get_symbol(symbol, size, address):
     elf = ElfFile(os.path.join('test_input', 'input.elf'))
-    assert elf.get_symbol(symbol).size() == size
-    assert elf.get_symbol(symbol).address() == address
+    assert elf.get_symbol(symbol).size == size
+    assert elf.get_symbol(symbol).address == address
 
 
 def test_get_not_existent_symbol():

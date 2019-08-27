@@ -36,9 +36,9 @@ assert 'symbol_uint8' in symbols
 symbol = elf.get_symbol('symbol_uint8')
 
 # get address of symbol symbol_uint8.
-assert isinstance(symbol.address(), int)
+assert isinstance(symbol.address, int)
 
 # get size of symbol symbol_uint8.
-assert symbol.size() == 1
+assert symbol.size == 1
 
 ```

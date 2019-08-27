@@ -23,6 +23,7 @@ class Symbol(ElfSymbol):
     represents a symbol.
     """
 
+    @property
     def size(self):
         """
         returns the size of the symbol.
@@ -32,6 +33,7 @@ class Symbol(ElfSymbol):
         """
         return self.entry.st_size
 
+    @property
     def address(self):
         """
         returns the address of the symbol.
