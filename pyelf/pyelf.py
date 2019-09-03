@@ -90,6 +90,19 @@ class ElfFile(ELFFile):
                     self._symbols[sym.name] = sym.entry
 
     @property
+    def binary(self):
+        """
+        returns the binary from the ELF file.
+        :return: binary data
+        :rtype: bytearray
+        """
+        data = b''
+        for segment in self.iter_segments():
+            if segment['p_type'] == 'PT_LOAD':
+                data += segment.data()
+        return data
+
+    @property
     def endianness(self):
         """
         endianness of the binary.
@@ -170,15 +183,3 @@ class ElfFile(ELFFile):
         if name in self._symbols.keys():
             return Symbol(self._symbols[name], name)
         raise ElfException('symbol ' + str(name) + ' not found')
-
-    def get_binary(self):
-        """
-        returns the binary from the ELF file.
-        :return: binary data
-        :rtype: bytearray
-        """
-        data = b''
-        for segment in self.iter_segments():
-            if segment['p_type'] == 'PT_LOAD':
-                data += segment.data()
-        return data

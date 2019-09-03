@@ -80,4 +80,4 @@ def test_get_binary():
     elf = ElfFile(os.path.join('test_input', 'input.elf'))
     with open(elf.path.replace('.elf', '.bin'), 'rb') as fp:
         binary = fp.read()
-    assert elf.get_binary() == binary
+    assert elf.binary == binary
