@@ -90,6 +90,27 @@ class ElfFile(ELFFile):
                     self._symbols[sym.name] = sym.entry
 
     @property
+    def abi_info(self):
+        """
+        returns the ABI information.
+        :return: ABI information
+        :rtype: AbiInfo
+        """
+        return AbiInfo(**dict((k, self.header[k]) for k in ('e_machine', 'e_version')))
+
+    @property
+    def base_address(self):
+        """
+        returns the address of the first instruction in the ELF file.
+
+        :return: first instruction's address
+        :rtype: Address
+        """
+        for segment in self.iter_segments():
+            if segment['p_type'] == 'PT_LOAD':
+                return Address(segment['p_paddr'])
+
+    @property
     def binary(self):
         """
         returns the binary from the ELF file.
@@ -120,6 +141,15 @@ class ElfFile(ELFFile):
         else:
             self._endianness = 'big'
 
+    def files(self):
+        """
+        returns an iterator containing all source files in the ELF file.
+
+        :return: list of file name
+        :rtype: list
+        """
+        return (k for k, v in self._symbols.items() if hasattr(v, 'st_info') and v.st_info.type == 'STT_FILE')
+
     @property
     def path(self):
         """
@@ -134,15 +164,6 @@ class ElfFile(ELFFile):
     def path(self, value):
         self._path = value
 
-    def files(self):
-        """
-        returns an iterator containing all source files in the ELF file.
-        
-        :return: list of file name
-        :rtype: list
-        """
-        return (k for k, v in self._symbols.items() if hasattr(v, 'st_info') and v.st_info.type == 'STT_FILE')
-
     def symbols(self):
         """
         returns a list of all symbols available in the ELF file.
@@ -152,24 +173,6 @@ class ElfFile(ELFFile):
         """
         return [k for k, v in self._symbols.items() if
                 hasattr(v, 'st_info') and v.st_info.type == 'STT_OBJECT']
-
-    def get_base_address(self):
-        """
-        returns the address of the first instruction in the ELF file.
-
-        :return: first instruction's address
-        :rtype: Address
-        """
-        for segment in self.iter_segments():
-            if segment['p_type'] == 'PT_LOAD':
-                return Address(segment['p_paddr'])
-
-    def get_abi_info(self):
-        """
-        returns the ABI information.
-        :return:
-        """
-        return AbiInfo(**dict((k, self.header[k]) for k in ('e_machine', 'e_version')))
 
     def get_symbol(self, name):
         """

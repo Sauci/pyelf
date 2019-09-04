@@ -38,12 +38,12 @@ def test_symbols():
 
 def test_get_base_address():
     elf_file = ElfFile(os.path.join('test_input', 'input.elf'))
-    assert elf_file.get_base_address() == 0x08000000
+    assert elf_file.base_address == 0x08000000
 
 
 def test_get_abi_info():
     elf_file = ElfFile(os.path.join('test_input', 'input.elf'))
-    abi_info = elf_file.get_abi_info()
+    abi_info = elf_file.abi_info
     assert abi_info.machine == 'EM_ARM'
     assert abi_info.version == 'EV_CURRENT'
 
