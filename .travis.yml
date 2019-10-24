@@ -3,9 +3,8 @@ python:
   - "2.7"
   - "3.6"
 install:
-  - pip install codecov
-  - pip install pytest pytest-cov
-  - pip install git+https://github.com/Sauci/pyelf.git@master
+  - pip install codecov pytest pytest-cov
+  - pip install git+https://github.com/Sauci/pyelf.git@$TRAVIS_BRANCH
 after_success:
   - codecov
 script:
