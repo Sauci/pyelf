@@ -13,5 +13,5 @@ __url__ = 'http://www.github.com/Sauci/pyelf'
 __description__ = ''
 __long_description__ = ''''''
 
-from .pyelf import Symbol, Address
-from .pyelf import ElfException, ElfFile
+from .cli import main
+from .pyelf import Address, ElfException, ElfFile, Symbol
