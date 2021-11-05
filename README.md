@@ -32,9 +32,9 @@ the bellow code snippet shows how to load an elf file and get some of its proper
 ```python
 from pyelf import ElfFile
 
-elf = ElfFile('test_input/input.elf')
+elf = ElfFile('tests/input.elf')
 
-# get a list of all symbols in file test_input/input.elf.
+# get a list of all symbols in file tests/input.elf.
 symbols = elf.symbols()
 assert 'symbol_uint8' in symbols
 

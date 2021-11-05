@@ -11,8 +11,8 @@ import pytest
 from pyelf.pyelf import Address, ElfException, ElfFile
 
 elf_files = (
-    os.path.join('test_input', 'big_endian.elf'),
-    os.path.join('test_input', 'little_endian.elf'))
+    os.path.join('tests', 'big_endian.elf'),
+    os.path.join('tests', 'little_endian.elf'))
 
 
 def test_address_string_format():
@@ -62,7 +62,7 @@ def test_get_abi_info(elf_file):
         ('big_endian.elf', 'big'),
         ('little_endian.elf', 'little')))
 def test_get_endianness(elf_file, expected_endianness):
-    elf_file = ElfFile(os.path.join('test_input', elf_file))
+    elf_file = ElfFile(os.path.join('tests', elf_file))
     endianness = elf_file.endianness
     assert endianness == expected_endianness
 
@@ -89,8 +89,8 @@ def test_get_not_existent_symbol(elf_file):
 
 
 @pytest.mark.parametrize('elf_file, bin_file', (
-        (os.path.join('test_input', 'big_endian.elf'), os.path.join('test_input', 'big_endian.bin')),
-        (os.path.join('test_input', 'little_endian.elf'), os.path.join('test_input', 'little_endian.bin'))))
+        (os.path.join('tests', 'big_endian.elf'), os.path.join('tests', 'big_endian.bin')),
+        (os.path.join('tests', 'little_endian.elf'), os.path.join('tests', 'little_endian.bin'))))
 def test_get_binary(elf_file, bin_file):
     elf_file = ElfFile(elf_file)
     with open(bin_file, 'rb') as fp:
@@ -100,7 +100,7 @@ def test_get_binary(elf_file, bin_file):
 
 @pytest.mark.parametrize('elf_file', elf_files)
 @pytest.mark.parametrize('address, expected_source_file, expected_line, expected_func_name', (
-        (0x30, '/usr/project/pyelf/test_input/main.c', 12, 'main'),))
+        (0x30, '/usr/project/pyelf/tests/main.c', 12, 'main'),))
 def test_get_source_info(elf_file, address, expected_source_file, expected_line, expected_func_name):
     elf_file = ElfFile(elf_file)
     source_file, line, func_name = elf_file.get_source_info(address)
