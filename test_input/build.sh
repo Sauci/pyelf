@@ -1,3 +1,11 @@
 #!/usr/bin/env bash
-cmake -H. -Bbuild -DCMAKE_C_COMPILER="/usr/local/gcc-arm-none-eabi-7-2017-q4-major/bin/arm-none-eabi-gcc" \
-    -DCMAKE_C_COMPILER_WORKS=1
+rm -rf build
+cmake -H. -Bbuild \
+    -DCMAKE_BUILD_TYPE=Debug \
+    -DCMAKE_C_COMPILER=$(which clang) \
+    -DCMAKE_AR=$(which llvm-ar) \
+    -DCMAKE_OBJCOPY=$(which llvm-objcopy) \
+    -DCMAKE_OBJDUMP=$(which llvm-objdump)
+pushd build
+make all
+popd
