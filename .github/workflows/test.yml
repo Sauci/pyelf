@@ -45,11 +45,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Build binaries with Clang/LLVM
-        run: cd test_input && ./build.sh
+        run: cd tests && ./build.sh
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: boot
+          name: tests_input
           path: |
-            test_input/*.elf
-            build/bin/*.bin
+            tests/*.elf
+            tests/*.bin
+  run-tests:
+    name: Run tests
+    needs: build-binaries
+    runs-on: ubuntu-20.04
+    container:
+      image: ghcr.io/sauci/pyelf:develop
+      credentials:
+        username: ${{secrets.PKG_REGISTRY_USERNAME}}
+        password: ${{secrets.PKG_REGISTRY_RW_TOKEN}}
+      volumes:
+        - ${{github.workspace}}:/usr/project/pyelf
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: tests_input
+          path: tests
+      - name: Run pytest tests
+        run: python3 -m pytest $(pwd) -v
