@@ -108,9 +108,7 @@ class ElfFile(ELFFile):
         :return: first instruction's address
         :rtype: Address
         """
-        for segment in self.iter_segments():
-            if segment['p_type'] == 'PT_LOAD':
-                return Address(segment['p_paddr'])
+        return self.header.e_entry
 
     @property
     def binary(self):
