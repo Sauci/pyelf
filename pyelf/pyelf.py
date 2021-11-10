@@ -233,10 +233,7 @@ class ElfFile(ELFFile):
                             elif high_pc_attr_class == 'constant':
                                 high_pc = low_pc + high_pc_attr.value
                             else:
-                                print('Error: invalid DW_AT_high_pc class:',
-                                      high_pc_attr_class)
                                 continue
-
                             if low_pc <= address < high_pc:
                                 func_name = DIE.attributes['DW_AT_name'].value.decode()
                                 break

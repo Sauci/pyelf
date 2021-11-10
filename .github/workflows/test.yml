@@ -74,4 +74,8 @@ jobs:
           name: tests_input
           path: tests
       - name: Run pytest tests
-        run: python3 -m pytest $(pwd) -v
+        run: python3 -m pytest $(pwd) -v --cov pyelf --cov-report=xml --verbose --cov-fail-under 90
+      - name: Upload code coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          files: coverage.xml
