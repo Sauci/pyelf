@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='pyelf',
-    version='0.1.0',
+    version='0.1.1',
     packages=['pyelf'],
     url='https://github.com/Sauci/pyelf',
     license='BSD',
