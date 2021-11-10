@@ -1,19 +1,27 @@
 #!/usr/bin/env bash
 
-for endinnaness in big little; do
-  # export path to the compiler.
-  export PATH=$PATH:/usr/local/opt/arm${endinnaness}-none-eabi-gcc
+rm -rf build
 
-  # delete the build directory if it exists.
-  rm -rf build
+# build the project using either the big endian toolchain.
+cmake -H. -Bbuild -DCMAKE_C_COMPILER=/usr/local/bin/armeb-none-eabi-gcc/bin/armeb-none-eabi-gcc \
+-DCMAKE_AR=/usr/local/bin/armeb-none-eabi-gcc/bin/armeb-none-eabi-ar \
+-DCMAKE_OBJCOPY=/usr/local/bin/armeb-none-eabi-gcc/bin/armeb-none-eabi-objcopy \
+-DCMAKE_OBJDUMP=/usr/local/bin/armeb-none-eabi-gcc/bin/armeb-none-eabi-objdump \
+-DENDIANNESS=big
+pushd build
+make all
+popd
 
-  # build the project using either the big or the little endian toolchain.
-  cmake -H. -Bbuild -DCMAKE_C_COMPILER=$(which arm-none-eabi-gcc) \
-  -DCMAKE_AR=$(which arm-none-eabi-ar) \
-  -DCMAKE_OBJCOPY=$(which arm-none-eabi-objcopy) \
-  -DCMAKE_OBJDUMP=$(which arm-none-eabi-objdump) \
-  -DCMAKE_ENDIANNESS=$CMAKE_ENDIANNESS
-  pushd build
-  make all
-  popd
-done
+rm -rf build
+
+# build the project using either the big endian toolchain.
+cmake -H. -Bbuild -DCMAKE_C_COMPILER=/usr/local/bin/armel-none-eabi-gcc/bin/arm-none-eabi-gcc \
+-DCMAKE_AR=/usr/local/bin/armel-none-eabi-gcc/bin/arm-none-eabi-ar \
+-DCMAKE_OBJCOPY=/usr/local/bin/armel-none-eabi-gcc/bin/arm-none-eabi-objcopy \
+-DCMAKE_OBJDUMP=/usr/local/bin/armel-none-eabi-gcc/bin/arm-none-eabi-objdump \
+-DENDIANNESS=little
+pushd build
+make all
+popd
+
+rm -rf build

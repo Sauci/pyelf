@@ -1,7 +1,7 @@
 MEMORY
 {
-    FLASH_ECC_BANK_0_SECTOR_0 (x) :  ORIGIN = 0x00000000, LENGTH = 16K
-    RAM_ECC (rwx) :                  ORIGIN = 0x08400000, LENGTH = 512K
+    FLASH (rx)  : ORIGIN = 0x00000000, LENGTH = 16K
+    RAM   (rwx) : ORIGIN = 0x08400000, LENGTH = 512K
 }
 
 
@@ -16,29 +16,52 @@ SECTIONS
         *(.code.boot);
         . = ALIGN(0x04);
         *(.code);
-        . = ALIGN(0x04);
-    } > FLASH_ECC_BANK_0_SECTOR_0
+    } > FLASH
     .rodata :
     {
-        *(.rodata)
         . = ALIGN(0x04);
-    } > FLASH_ECC_BANK_0_SECTOR_0
+        *(.rodata)
+    } > FLASH
     .text :
     {
-        *(.text)
         . = ALIGN(0x04);
-    } > FLASH_ECC_BANK_0_SECTOR_0
+        *(.text)
+    } > FLASH
     .data :
     {
-        *(.data)
         . = ALIGN(0x04);
-    } > FLASH_ECC_BANK_0_SECTOR_0
-    .bss :
+        *(.data)
+    } > FLASH
+    .init_lma :
+    {
+        . = ALIGN(0x04);
+    } > FLASH = 0xFF
+    .init_vma : AT(ADDR(.init_lma))
+    {
+        *(.unsigned.8)
+        . = ALIGN(0x04);
+        *(.unsigned.16)
+        . = ALIGN(0x04);
+        *(.unsigned.32)
+        . = ALIGN(0x04);
+        *(.signed.8)
+        . = ALIGN(0x04);
+        *(.signed.16)
+        . = ALIGN(0x04);
+        *(.signed.32)
+        . = ALIGN(0x04);
+    } > RAM
+    .bss (NOLOAD) :
     {
         *(.bss)
         *(COMMON)
         . = ALIGN(0x04);
-    } > RAM_ECC
+    } > RAM
+    .free_flash_lma ADDR(.init_lma) + SIZEOF(.init_vma) :
+    {
+        BYTE(0xFF);
+        . = ABSOLUTE(LENGTH(FLASH));
+    } > FLASH = 0xFF
     /DISCARD/ :
     {
         *(.comment)
