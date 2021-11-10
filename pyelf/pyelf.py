@@ -4,9 +4,11 @@
 :date: 27/06/2018
 """
 
+from elftools.common.exceptions import DWARFError
+from elftools.dwarf.descriptions import describe_form_class
 from elftools.elf.elffile import ELFFile
-from elftools.elf.sections import SymbolTableSection, SUNWSyminfoTableSection
 from elftools.elf.sections import Symbol as ElfSymbol
+from elftools.elf.sections import SymbolTableSection, SUNWSyminfoTableSection
 
 
 class Address(int):
@@ -106,9 +108,7 @@ class ElfFile(ELFFile):
         :return: first instruction's address
         :rtype: Address
         """
-        for segment in self.iter_segments():
-            if segment['p_type'] == 'PT_LOAD':
-                return Address(segment['p_paddr'])
+        return self.header.e_entry
 
     @property
     def binary(self):
@@ -186,3 +186,62 @@ class ElfFile(ELFFile):
         if name in self._symbols.keys():
             return Symbol(self._symbols[name], name)
         raise ElfException('symbol ' + str(name) + ' not found')
+
+    def get_source_info(self, address):
+        """
+        returns the full path to the source file containing the code for the specified address, as well as the line
+        number (1-based), and the function name (if in a function).
+
+        :param address: requested address
+        :type address: int
+        :return: a tuple containing the source file path, the source file line (1-based) and the function name (None if
+        not in a function)
+        :rtype: tuple
+        """
+        file_path, line, func_name = None, -1, None
+        line = -1
+        func_name = None
+        dwarf_info = self.get_dwarf_info()
+        for CU in dwarf_info.iter_CUs():
+            try:
+                line_program = dwarf_info.line_program_for_CU(CU)
+            except DWARFError:
+                continue
+            if line_program is None:
+                continue
+            prev_state = None
+            if line == -1:
+                for entry in line_program.get_entries():
+                    if entry.state is None:
+                        continue
+                    if prev_state and prev_state.address <= address < entry.state.address:
+                        file_path = CU.get_top_DIE().get_full_path()
+                        line = prev_state.line
+                    if entry.state.end_sequence:
+                        prev_state = None
+                    else:
+                        prev_state = entry.state
+            if func_name is None:
+                for DIE in CU.iter_DIEs():
+                    try:
+                        if DIE.tag == 'DW_TAG_subprogram':
+                            low_pc = DIE.attributes['DW_AT_low_pc'].value
+                            high_pc_attr = DIE.attributes['DW_AT_high_pc']
+                            high_pc_attr_class = describe_form_class(high_pc_attr.form)
+                            if high_pc_attr_class == 'address':
+                                high_pc = high_pc_attr.value
+                            elif high_pc_attr_class == 'constant':
+                                high_pc = low_pc + high_pc_attr.value
+                            else:
+                                print('Error: invalid DW_AT_high_pc class:',
+                                      high_pc_attr_class)
+                                continue
+
+                            if low_pc <= address < high_pc:
+                                func_name = DIE.attributes['DW_AT_name'].value.decode()
+                                break
+                    except KeyError:
+                        continue
+                if func_name is not None:
+                    break
+        return file_path, line - 1 if line != -1 else -1, func_name

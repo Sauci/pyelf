@@ -6,4 +6,8 @@ docs/.build
 docs/.static
 docs/.templates
 pyelf.egg-info/*
-test_input/build
+tests/build
+tests/*.asm
+tests/*.bin
+tests/*.elf
+tests/*.map

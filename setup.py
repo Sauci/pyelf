@@ -12,6 +12,6 @@ setup(
     install_requires=['pytest',
                       'pyelftools'],
     entry_points={
-        'console_scripts': [ 'pyelf=pyelf:main' ]
+        'console_scripts': ['pyelf=pyelf:main']
     },
 )
