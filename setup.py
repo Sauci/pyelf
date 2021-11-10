@@ -9,8 +9,7 @@ setup(
     author='Guillaume Sottas',
     author_email='guillaumesottas@gmail.com',
     description='high level API to retrieve information from ELF files.',
-    install_requires=['pytest',
-                      'pyelftools'],
+    install_requires=['pyelftools'],
     entry_points={
         'console_scripts': ['pyelf=pyelf:main']
     },
