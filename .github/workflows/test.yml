@@ -50,7 +50,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: tests_input
+          name: test_inputs
           path: |
             tests/*.elf
             tests/*.bin
@@ -71,10 +71,10 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v2
         with:
-          name: tests_input
+          name: test_inputs
           path: tests
       - name: Run pytest tests
-        run: python3 -m pytest $(pwd) -v --cov pyelf --cov-report=xml --verbose --cov-fail-under 90
+        run: python3 -m pytest $(pwd) -v --cov src/pyelf --cov-report=xml --verbose --cov-fail-under 90
       - name: Upload code coverage to Codecov
         uses: codecov/codecov-action@v2
         with:

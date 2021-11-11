@@ -1,2 +1,2 @@
 [run]
-omit = pyelf/cli.py
+omit = src/pyelf/cli.py
