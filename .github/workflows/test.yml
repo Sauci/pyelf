@@ -45,7 +45,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Build binaries with Clang/LLVM
+      - name: Build binaries
         run: cd tests && ./build.sh
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
