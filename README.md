@@ -1,4 +1,4 @@
-[![tests status](https://travis-ci.org/Sauci/pyelf.svg?branch=master)](https://travis-ci.org/Sauci/pyelf)
+![tests status](https://github.com/Sauci/pyelf/actions/workflows/test.yml/badge.svg)
 [![code coverage](https://codecov.io/gh/Sauci/pyelf/branch/master/graph/badge.svg?token=Q5aceZRFXh)](https://codecov.io/gh/Sauci/pyelf)
 
 ## package description
