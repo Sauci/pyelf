@@ -45,12 +45,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Build binaries with Clang/LLVM
+      - name: Build binaries
         run: cd tests && ./build.sh
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: tests_input
+          name: test_inputs
           path: |
             tests/*.elf
             tests/*.bin
@@ -71,11 +71,49 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v2
         with:
-          name: tests_input
+          name: test_inputs
           path: tests
       - name: Run pytest tests
-        run: python3 -m pytest $(pwd) -v --cov pyelf --cov-report=xml --verbose --cov-fail-under 90
+        run: python3 -m pytest $(pwd) -v --cov src/pyelf --cov-report=xml --verbose --cov-fail-under 90
       - name: Upload code coverage to Codecov
         uses: codecov/codecov-action@v2
         with:
           files: coverage.xml
+  build-distribution:
+    name: Build distribution
+    needs: build-and-push-image
+    runs-on: ubuntu-20.04
+    container:
+      image: ghcr.io/sauci/pyelf:develop
+      credentials:
+        username: ${{secrets.PKG_REGISTRY_USERNAME}}
+        password: ${{secrets.PKG_REGISTRY_RW_TOKEN}}
+      volumes:
+        - ${{github.workspace}}:/usr/project/pyelf
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Build dist
+        run: python3 -m build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist
+          path: dist
+  publish-package:
+    name: Publish package
+    needs: [run-tests,
+            build-distribution]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: dist
+          path: dist
+      - name: Publish package on Python Package Index
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: ${{secrets.PYPI_USERNAME}}
+          password: ${{secrets.PYPI_PASSWORD}}

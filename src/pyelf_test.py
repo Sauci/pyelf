@@ -8,11 +8,11 @@ import os
 
 import pytest
 
-from pyelf.pyelf import Address, ElfException, ElfFile
+from src.pyelf import Address, ElfException, ElfFile
 
 elf_files = (
-    os.path.join('tests', 'big_endian.elf'),
-    os.path.join('tests', 'little_endian.elf'))
+    os.path.join(os.path.dirname(__file__), '..', 'tests', 'big_endian.elf'),
+    os.path.join(os.path.dirname(__file__), '..', 'tests', 'little_endian.elf'))
 
 
 def test_address_string_format():
@@ -62,7 +62,7 @@ def test_get_abi_info(elf_file):
         ('big_endian.elf', 'big'),
         ('little_endian.elf', 'little')))
 def test_get_endianness(elf_file, expected_endianness):
-    elf_file = ElfFile(os.path.join('tests', elf_file))
+    elf_file = ElfFile(os.path.join(os.path.dirname(__file__), '..', 'tests', elf_file))
     endianness = elf_file.endianness
     assert endianness == expected_endianness
 
@@ -89,8 +89,8 @@ def test_get_not_existent_symbol(elf_file):
 
 
 @pytest.mark.parametrize('elf_file, bin_file', (
-        (os.path.join('tests', 'big_endian.elf'), os.path.join('tests', 'big_endian.bin')),
-        (os.path.join('tests', 'little_endian.elf'), os.path.join('tests', 'little_endian.bin'))))
+        (os.path.join(os.path.dirname(__file__), '..', 'tests', 'big_endian.elf'), os.path.join(os.path.dirname(__file__), '..', 'tests', 'big_endian.bin')),
+        (os.path.join(os.path.dirname(__file__), '..', 'tests', 'little_endian.elf'), os.path.join(os.path.dirname(__file__), '..', 'tests', 'little_endian.bin'))))
 def test_get_binary(elf_file, bin_file):
     elf_file = ElfFile(elf_file)
     with open(bin_file, 'rb') as fp:
@@ -100,7 +100,7 @@ def test_get_binary(elf_file, bin_file):
 
 @pytest.mark.parametrize('elf_file', elf_files)
 @pytest.mark.parametrize('address, expected_source_file, expected_line, expected_func_name', (
-        (0x00000030, os.path.abspath(os.path.join(os.path.dirname(__file__), 'tests', 'main.c')), 21, 'main'),))
+        (0x00000030, os.path.abspath(os.path.join(os.path.dirname(__file__), '../tests', 'main.c')), 21, 'main'),))
 def test_get_source_info(elf_file, address, expected_source_file, expected_line, expected_func_name):
     elf_file = ElfFile(elf_file)
     source_file, line, func_name = elf_file.get_source_info(address)

@@ -9,6 +9,7 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     make \
     python3 \
     python3-pip \
+    python3-venv \
     wget
 
 # install arm-none-eabi toolchain for big endian targets.
@@ -24,9 +25,12 @@ RUN wget -O gcc-arm-none-eabi.tar.bz2 https://developer.arm.com/-/media/Files/do
     rm gcc-arm-none-eabi.tar.bz2
 
 COPY requirements.txt requirements.txt
+COPY requirements-test.txt requirements-test.txt
 
 RUN python3 -m pip install --upgrade pip && \
-    python3 -m pip install -r requirements.txt
+    python3 -m pip install --upgrade build && \
+    python3 -m pip install -r requirements.txt && \
+    python3 -m pip install -r requirements-test.txt
 
 WORKDIR $SOURCES
 VOLUME ["$SOURCES"]
