@@ -108,7 +108,7 @@ class ElfFile(ELFFile):
         :return: first instruction's address
         :rtype: Address
         """
-        return self.header.e_entry
+        return Address(self.header.e_entry)
 
     @property
     def binary(self):

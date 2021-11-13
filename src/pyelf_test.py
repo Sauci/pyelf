@@ -49,6 +49,7 @@ def test_symbols(elf_file, symbol):
 def test_get_base_address(elf_file):
     elf_file = ElfFile(elf_file)
     assert elf_file.base_address == 0x00000020
+    assert isinstance(elf_file.base_address, Address)
 
 
 @pytest.mark.parametrize('elf_file', elf_files)
