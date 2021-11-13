@@ -90,6 +90,12 @@ def test_get_not_existent_symbol(elf_file):
         elf_file.get_symbol('not_valid_symbol')
 
 
+@pytest.mark.parametrize('elf_file', elf_files)
+def test_get_binary_address(elf_file):
+    elf_file = ElfFile(elf_file)
+    assert elf_file.binary_address == 0x00000000
+
+
 @pytest.mark.parametrize('elf_file, bin_file', (
         (os.path.join(os.path.dirname(__file__), '..', 'tests', 'big_endian.elf'), os.path.join(os.path.dirname(__file__), '..', 'tests', 'big_endian.bin')),
         (os.path.join(os.path.dirname(__file__), '..', 'tests', 'little_endian.elf'), os.path.join(os.path.dirname(__file__), '..', 'tests', 'little_endian.bin'))))

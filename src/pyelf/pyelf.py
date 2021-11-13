@@ -111,6 +111,20 @@ class ElfFile(ELFFile):
         return Address(self.header.e_entry)
 
     @property
+    def binary_address(self):
+        """
+        returns the lowest address of the binary from the ELF file.
+        :return: lowest binary address
+        :rtype: Address
+        """
+        address = Address(-1)
+        for segment in self.iter_segments():
+            if segment['p_type'] == 'PT_LOAD':
+                if (address == -1) or (segment.header['p_paddr'] < address):
+                    address = segment.header['p_paddr']
+        return address
+
+    @property
     def binary(self):
         """
         returns the binary from the ELF file.
