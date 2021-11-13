@@ -97,8 +97,10 @@ def test_get_binary_address(elf_file):
 
 
 @pytest.mark.parametrize('elf_file, bin_file', (
-        (os.path.join(os.path.dirname(__file__), '..', 'tests', 'big_endian.elf'), os.path.join(os.path.dirname(__file__), '..', 'tests', 'big_endian.bin')),
-        (os.path.join(os.path.dirname(__file__), '..', 'tests', 'little_endian.elf'), os.path.join(os.path.dirname(__file__), '..', 'tests', 'little_endian.bin'))))
+        (os.path.join(os.path.dirname(__file__), '..', 'tests', 'big_endian.elf'),
+         os.path.join(os.path.dirname(__file__), '..', 'tests', 'big_endian.bin')),
+        (os.path.join(os.path.dirname(__file__), '..', 'tests', 'little_endian.elf'),
+         os.path.join(os.path.dirname(__file__), '..', 'tests', 'little_endian.bin'))))
 def test_get_binary(elf_file, bin_file):
     elf_file = ElfFile(elf_file)
     with open(bin_file, 'rb') as fp:

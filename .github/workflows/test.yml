@@ -102,8 +102,8 @@ jobs:
           path: dist
   publish-package:
     name: Publish package
-    needs: [run-tests,
-            build-distribution]
+    needs: [ run-tests,
+             build-distribution ]
     runs-on: ubuntu-20.04
     steps:
       - name: Download artifacts
