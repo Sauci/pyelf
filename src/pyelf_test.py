@@ -15,9 +15,10 @@ elf_files = (
     os.path.join(os.path.dirname(__file__), '..', 'tests', 'little_endian.elf'))
 
 
-def test_address_string_format():
-    address = Address(12)
-    assert str(address) == '0x0000000C'
+@pytest.mark.parametrize('address, expected_string', ((-1, '-0x00000001'), (12, '0x0000000C')))
+def test_address_string_format(address, expected_string):
+    address = Address(address)
+    assert str(address) == expected_string
 
 
 @pytest.mark.parametrize('elf_file', elf_files)

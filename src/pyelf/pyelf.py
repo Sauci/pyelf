@@ -17,7 +17,7 @@ class Address(int):
     """
 
     def __str__(self):
-        return '0x{0:08X}'.format(self)
+        return '{0}0x{1:08X}'.format('-' if self < 0 else '', abs(self))
 
 
 class Symbol(ElfSymbol):
