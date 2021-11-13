@@ -11,7 +11,7 @@ with [elf](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format) files.
 ### using `pip`
 
 install the package by running the following command:
-`pip install git+https://github.com/Sauci/pyelf.git@master`
+`pip install sauci-pyelf`
 
 ### from source
 

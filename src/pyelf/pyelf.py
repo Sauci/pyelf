@@ -17,7 +17,7 @@ class Address(int):
     """
 
     def __str__(self):
-        return '0x{0:08X}'.format(self)
+        return '{0}0x{1:08X}'.format('-' if self < 0 else '', abs(self))
 
 
 class Symbol(ElfSymbol):
@@ -108,7 +108,21 @@ class ElfFile(ELFFile):
         :return: first instruction's address
         :rtype: Address
         """
-        return self.header.e_entry
+        return Address(self.header.e_entry)
+
+    @property
+    def binary_address(self):
+        """
+        returns the lowest address of the binary from the ELF file.
+        :return: lowest binary address
+        :rtype: Address
+        """
+        address = Address(-1)
+        for segment in self.iter_segments():
+            if segment['p_type'] == 'PT_LOAD':
+                if (address == -1) or (segment.header['p_paddr'] < address):
+                    address = segment.header['p_paddr']
+        return address
 
     @property
     def binary(self):

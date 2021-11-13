@@ -15,9 +15,10 @@ elf_files = (
     os.path.join(os.path.dirname(__file__), '..', 'tests', 'little_endian.elf'))
 
 
-def test_address_string_format():
-    address = Address(12)
-    assert str(address) == '0x0000000C'
+@pytest.mark.parametrize('address, expected_string', ((-1, '-0x00000001'), (12, '0x0000000C')))
+def test_address_string_format(address, expected_string):
+    address = Address(address)
+    assert str(address) == expected_string
 
 
 @pytest.mark.parametrize('elf_file', elf_files)
@@ -48,6 +49,7 @@ def test_symbols(elf_file, symbol):
 def test_get_base_address(elf_file):
     elf_file = ElfFile(elf_file)
     assert elf_file.base_address == 0x00000020
+    assert isinstance(elf_file.base_address, Address)
 
 
 @pytest.mark.parametrize('elf_file', elf_files)
@@ -88,9 +90,17 @@ def test_get_not_existent_symbol(elf_file):
         elf_file.get_symbol('not_valid_symbol')
 
 
+@pytest.mark.parametrize('elf_file', elf_files)
+def test_get_binary_address(elf_file):
+    elf_file = ElfFile(elf_file)
+    assert elf_file.binary_address == 0x00000000
+
+
 @pytest.mark.parametrize('elf_file, bin_file', (
-        (os.path.join(os.path.dirname(__file__), '..', 'tests', 'big_endian.elf'), os.path.join(os.path.dirname(__file__), '..', 'tests', 'big_endian.bin')),
-        (os.path.join(os.path.dirname(__file__), '..', 'tests', 'little_endian.elf'), os.path.join(os.path.dirname(__file__), '..', 'tests', 'little_endian.bin'))))
+        (os.path.join(os.path.dirname(__file__), '..', 'tests', 'big_endian.elf'),
+         os.path.join(os.path.dirname(__file__), '..', 'tests', 'big_endian.bin')),
+        (os.path.join(os.path.dirname(__file__), '..', 'tests', 'little_endian.elf'),
+         os.path.join(os.path.dirname(__file__), '..', 'tests', 'little_endian.bin'))))
 def test_get_binary(elf_file, bin_file):
     elf_file = ElfFile(elf_file)
     with open(bin_file, 'rb') as fp:
