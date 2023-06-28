@@ -12,6 +12,7 @@ __license__ = 'BSD-3'
 __url__ = 'http://www.github.com/Sauci/pyelf'
 __description__ = ''
 __long_description__ = ''''''
+import os
+import sys
 
-from .cli import main
-from .pyelf import Address, ElfException, ElfFile, Symbol
+sys.path.append(os.path.dirname(__file__))

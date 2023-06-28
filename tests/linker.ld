@@ -50,6 +50,8 @@ SECTIONS
         . = ALIGN(0x04);
         *(.signed.32)
         . = ALIGN(0x04);
+        *(.undefined_size)
+        . = ALIGN(0x04);
     } > RAM
     .bss (NOLOAD) :
     {
