@@ -5,14 +5,14 @@
 """
 
 import argparse
+import json
 
-from .pyelf import ElfFile
+from pyelf.parser import ElfFile
 
 
 def main():
     parser = argparse.ArgumentParser(prog='pya2l', description='python command line utility for elf-formatted files.')
     parser.add_argument('input_file', help='input file path')
-    parser.add_argument('output_file', type=argparse.FileType('wb'), help='output file path')
     parser.add_argument('-O',
                         dest='output_format',
                         metavar='output format',
@@ -24,9 +24,19 @@ def main():
     args = parser.parse_args()
 
     elf = ElfFile(args.input_file)
+    result = list()
+    for variable in elf.variables():
+        # result.append(variable.to_json())
+        try:
+            result.append(variable.to_json())
+        except RecursionError as e:
+            print(f'{variable.name} | {str(e)}')
+            continue
+    with open('output2.json', 'w') as fp:
+        json.dump(result, fp, indent=2, sort_keys=True)
 
-    if args.output_format == 'binary':
-        args.output_file.write(elf.binary)
+    # if args.output_format == 'binary':
+    #     args.output_file.write(elf.binary)
 
 
 if __name__ == '__main__':

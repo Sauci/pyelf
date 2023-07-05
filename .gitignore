@@ -12,3 +12,4 @@ tests/*.asm
 tests/*.bin
 tests/*.elf
 tests/*.map
+**/__pycache__/
